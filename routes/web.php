@@ -14,7 +14,7 @@
 Route::get('/', function () {
 	$videoFolder = storage_path('app/public/video');
 	if (!file_exists($videoFolder)) {
-		abort('Missing video folder');
+		abort(500, 'Missing video folder');
 	}
 
 	$videos = scandir($videoFolder);
@@ -22,7 +22,7 @@ Route::get('/', function () {
 	array_shift($videos);
 	$videosCount = count($videos);
 	if (!$videosCount) {
-	    abort('No videos found');
+	    abort(500, 'No videos found');
 	}
 
 	$video = $videos[mt_rand(0, $videosCount - 1)];
