@@ -12,7 +12,22 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+	$videoFolder = storage_path('app/public/video');
+	if (!file_exists($videoFolder)) {
+		abort('Missing video folder');
+	}
+
+	$videos = scandir($videoFolder);
+	array_shift($videos);
+	array_shift($videos);
+	$videosCount = count($videos);
+	if (!$videosCount) {
+	    abort('No videos found');
+	}
+
+	$video = $videos[mt_rand(0, $videosCount - 1)];
+
+    return view('video', ['video' => $video]);
 });
 
 
