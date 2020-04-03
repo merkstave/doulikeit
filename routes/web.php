@@ -11,12 +11,8 @@
 |
 */
 
-function prepareList(string $rootPath, string $name): array {
-	$videosPath = $rootPath . DIRECTORY_SEPARATOR . $name;
-	if (!file_exists($videosPath)) {
-		abort(500, 'Missing "' . $name . '" video folder');
-	}
-	$list = scandir($videosPath);
+function prepareList(string $path): array {
+	$list = scandir($path);
 	array_shift($list);
 	array_shift($list);
 	return $list;
@@ -29,7 +25,12 @@ Route::get('/', function () {
 	}
 
 	$videoType = mt_rand(0, 1) ? 'finds' : 'og';
-	$list = prepareList($videoRoot, $videoType);
+	$videosPath = $videoRoot . DIRECTORY_SEPARATOR . $videoType;
+	if (!file_exists($videosPath)) {
+		abort(500, 'Missing "' . $name . '" video folder');
+	}
+
+	$list = prepareList($videosPath);
 	$videosCount = count($list);
 	if (!$videosCount) {
 	    abort(500, 'Missing videos in "' . $videoType . '" folder');
@@ -37,7 +38,7 @@ Route::get('/', function () {
 
 	$video = $list[mt_rand(0, $videosCount - 1)];
 
-    return view('video', ['video' => $video]);
+    return view('video', ['video' => urlencode($videoType . '/' . $video)]);
 });
 
 
