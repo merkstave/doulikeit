@@ -38,7 +38,7 @@ Route::get('/', function () {
 
 	$video = $list[mt_rand(0, $videosCount - 1)];
 
-    return view('video', ['video' => $videoType . '/' . urlencode($video)]);
+    return view('video', ['video' => $videoType . '/' . rawurlencode($video)]);
 });
 
 
