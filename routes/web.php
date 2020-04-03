@@ -11,18 +11,28 @@
 |
 */
 
+function prepareList(string $rootPath, string $name): array {
+	$videosPath = $rootPath . DIRECTORY_SEPARATOR . $name;
+	if (!file_exists($videosPath)) {
+		abort(500, 'Missing "' . $name . '" video folder');
+	}
+	$list = scandir($videosPath);
+	array_shift($list);
+	array_shift($list);
+	return $list;
+}
+
 Route::get('/', function () {
-	$videoFolder = storage_path('app/public/video');
-	if (!file_exists($videoFolder)) {
+	$videoRoot = storage_path('app/public/video');
+	if (!file_exists($videoRoot)) {
 		abort(500, 'Missing video folder');
 	}
 
-	$videos = scandir($videoFolder);
-	array_shift($videos);
-	array_shift($videos);
-	$videosCount = count($videos);
+	$videoType = mt_rand(0, 1) ? 'finds' : 'og';
+	$list = prepareList($videoRoot, $videoType);
+	$videosCount = count($list);
 	if (!$videosCount) {
-	    abort(500, 'No videos found');
+	    abort(500, 'Missing videos in "' . $videoType . '" folder');
 	}
 
 	$video = $videos[mt_rand(0, $videosCount - 1)];
