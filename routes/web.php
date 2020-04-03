@@ -35,7 +35,7 @@ Route::get('/', function () {
 	    abort(500, 'Missing videos in "' . $videoType . '" folder');
 	}
 
-	$video = $videos[mt_rand(0, $videosCount - 1)];
+	$video = $list[mt_rand(0, $videosCount - 1)];
 
     return view('video', ['video' => $video]);
 });
